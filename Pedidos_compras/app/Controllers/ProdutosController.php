@@ -2,45 +2,30 @@
 
 namespace App\Controllers;
 
-use App\Models\PedidosModel;
+use App\Models\ProdutosModel;
 use CodeIgniter\RESTful\ResourceController;
 use Exception;
 
-class PedidosController extends ResourceController
+class ProdutosController extends ResourceController
 {
-    private $pedidosModel;
-    private $idClientesModel;
+    private $produtosModel;
     public function __construct()
     {
-        $this->pedidosModel = new \App\Models\PedidosModel();
-        $this->idClientesModel = new \App\Models\ClientesModel();
+        $this->produtosModel = new \App\Models\ProdutosModel();        
     }
     public function get()
     {
-        $data = $this->pedidosModel->findAll();
+        $data = $this->produtosModel->findAll();
         return $this->response->setJSON($data); //format data
     }
     public function create()
     {
         $response = [];
-        $newPedidos['status'] = $this->request->getPost('status');
-        $newPedidos['total'] = $this->request->getPost('total');        
-        $cliente_id = $this->request->getPost('cliente_id'); //recebe id do cliente/chave estrangeira
-        
-        $cliente = $this->idClientesModel->find($cliente_id);
+        $newProdutos['descricao'] = $this->request->getPost('descricao');
+        $newProdutos['valor'] = $this->request->getPost('valor');
 
-        if(!$cliente){
-            //caso nao encontre o cliente
-            return $this->response->setJSON([
-                    'response' => 'error',
-                    'mensage'=> 'Cliente não encontrado'
-            ])->setStatusCode(404);
-        }
-        //caso exista cliente
-        $newPedidos['cliente_id'] =$cliente_id;
-        
         try {
-            if ($this->pedidosModel->insert($newPedidos)) {
+            if ($this->produtosModel->insert($newProdutos)) {
                 $response = [
                     'response' => 'sucesso',
                     'mensage' => 'Pedido cadastrado com sucesso'
@@ -48,13 +33,13 @@ class PedidosController extends ResourceController
             } else {
                 $response = [
                     'response' => 'error',
-                    'mensage' => 'erro ao cadastrar Pedidos '
+                    'mensage' => 'erro ao cadastrar produtos '
                 ];
             }
         } catch (Exception $e) {
             $response = [
                 'response' => 'error',
-                'mensage' => 'Erro ao salvar Pedidos',
+                'mensage' => 'Erro ao salvar produtos',
                 'errors' => [
                     'exception' => $e->getMessage()
                 ]
@@ -63,11 +48,11 @@ class PedidosController extends ResourceController
         return $this->response->setJSON($response);
     }
     public function update($id = null)
-    { 
+    {
         $data = $this->request->getJSON();
         $response = [];
 
-        if ($this->pedidosModel->update($id, $data)) {
+        if ($this->produtosModel->update($id, $data)) {
             $response = [
                 'status' => 200,
                 'error' => null,
@@ -77,16 +62,16 @@ class PedidosController extends ResourceController
             ];
             return $this->respond($response);
         } else {
-            return $this->fail($this->pedidosModel->errors());
+            return $this->fail($this->produtosModel->errors());
         }
     }
     public function delete($id = null)
-    {        
+    {
         $response = [];
         try {
-            $pedidos = $this->pedidosModel->find($id);
-            if ($pedidos) {
-                if ($this->pedidosModel->delete($id)) {
+            $produtos = $this->produtosModel->find($id);
+            if ($produtos) {
+                if ($this->produtosModel->delete($id)) {
                     $response = [
                         'status' => 200,
                         'error' => null,
@@ -96,27 +81,26 @@ class PedidosController extends ResourceController
                     ];
                 } else {
                     $response = [
-                        'response' => 'Error',
-                        'mensage' => 'Erro ao deletar Pedido'
+                        'response' => 'error',
+                        'mensage' => 'Erro ao deletar Produto'
                     ];
-                }                
-            }else{
-                //caso nao encontre clientes
+                }
+            } else {
                 return $this->response->setJSON([
-                    'response' => 'Error',
-                    'mensage' => 'Pedido nao encontrado'
+                    'response' => 'error',
+                    'mensage' => 'Produto nao encontrado'
 
                 ])->setStatusCode(404);
-            }                       
+            }
         } catch (Exception $e) {
             $response = [
-                'response' => 'Error',
-                'mensage' => 'Erro ao deletar pedido',
+                'response' => 'error',
+                'mensage' => 'erro ao deletar Poduto',
                 'errors' => [
                     'exception' => $e->getMessage()
                 ]
             ];
         }
-         return response( $this->response->setJSON($response));
+        return response($this->response->setJSON($response));
     }
 }
