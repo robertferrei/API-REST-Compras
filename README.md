@@ -15,6 +15,9 @@ Antes de começar :checkered_flag:, você precisa ter o [Apache](https://httpd.a
 -por via  das dúvidas verifique se o codeigniter foi instalado corretamente com o comando :codeigniter --version
 
 -é importante dizer que  para ter todas as dependencias atualizada utilize  o comando:  composer update.
+
+- clone esse projeto
+ $ git clone https://github.com/robertferrei/API-REST-Compras.git
 ```
 
 ## 🚀 Tecnologias:
