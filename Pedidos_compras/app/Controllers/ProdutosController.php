@@ -18,6 +18,28 @@ class ProdutosController extends ResourceController
         $data = $this->produtosModel->findAll();
         return $this->response->setJSON($data); //format data
     }
+    public function getList($id = null)
+    {       
+        if ($id === null) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'mensagem' => 'Id não encontrado'
+            ])->setStatusCode(400);            
+        }
+        $produtos = $this->produtosModel->find($id);
+        if ($produtos) {
+            return $this->response->setJSON([
+                'status' => 'sucess',
+                'data' => $produtos
+
+            ])->setStatusCode(200);
+        }else{
+            return $this->response->setJSON([
+                'status'=> 'error',
+                'mensagem' => 'produto não encontrado'
+            ])->setStatusCode(404);
+        }    
+    }
     public function create()
     {
         $response = [];
@@ -33,13 +55,13 @@ class ProdutosController extends ResourceController
             } else {
                 $response = [
                     'response' => 'error',
-                    'mensage' => 'erro ao cadastrar produtos '
+                    'mensagem' => 'erro ao cadastrar produtos '
                 ];
             }
         } catch (Exception $e) {
             $response = [
                 'response' => 'error',
-                'mensage' => 'Erro ao salvar produtos',
+                'mensagem' => 'Erro ao salvar produtos',
                 'errors' => [
                     'exception' => $e->getMessage()
                 ]
@@ -47,6 +69,7 @@ class ProdutosController extends ResourceController
         }
         return $this->response->setJSON($response);
     }
+
     public function update($id = null)
     {
         $data = $this->request->getJSON();
@@ -56,7 +79,7 @@ class ProdutosController extends ResourceController
             $response = [
                 'status' => 200,
                 'error' => null,
-                'mensage' => [
+                'mensagem' => [
                     'sucess' => 'Dados atualizado com sucesso'
                 ]
             ];
@@ -65,6 +88,7 @@ class ProdutosController extends ResourceController
             return $this->fail($this->produtosModel->errors());
         }
     }
+
     public function delete($id = null)
     {
         $response = [];
@@ -75,27 +99,27 @@ class ProdutosController extends ResourceController
                     $response = [
                         'status' => 200,
                         'error' => null,
-                        'mensage' => [
+                        'mensagem' => [
                             'sucess' => 'Dados Deletado com sucesso'
                         ]
                     ];
                 } else {
                     $response = [
                         'response' => 'error',
-                        'mensage' => 'Erro ao deletar Produto'
+                        'mensagem' => 'Erro ao deletar Produto'
                     ];
                 }
             } else {
                 return $this->response->setJSON([
                     'response' => 'error',
-                    'mensage' => 'Produto nao encontrado'
+                    'mensagem' => 'Produto nao encontrado'
 
                 ])->setStatusCode(404);
             }
         } catch (Exception $e) {
             $response = [
                 'response' => 'error',
-                'mensage' => 'erro ao deletar Poduto',
+                'mensagem' => 'erro ao deletar Poduto',
                 'errors' => [
                     'exception' => $e->getMessage()
                 ]
@@ -103,4 +127,5 @@ class ProdutosController extends ResourceController
         }
         return response($this->response->setJSON($response));
     }
+
 }

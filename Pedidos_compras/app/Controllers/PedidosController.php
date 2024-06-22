@@ -19,7 +19,31 @@ class PedidosController extends ResourceController
     {
         $data = $this->pedidosModel->findAll();
         return $this->response->setJSON($data); //format data
+    }  
+
+    public function getList($id = null)
+    {       
+        if ($id === null) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'mensagemm' => 'Id não encontrado'
+            ])->setStatusCode(400);            
+        }
+        $pedidos = $this->pedidosModel->find($id);
+        if ($pedidos) {
+            return $this->response->setJSON([
+                'status' => 'sucess',
+                'data' => $pedidos
+
+            ])->setStatusCode(200);
+        }else{
+            return $this->response->setJSON([
+                'status'=> 'error',
+                'mensagem' => 'pedido não encontrado'
+            ])->setStatusCode(404);
+        }    
     }
+
     public function create()
     {
         $response = [];
@@ -43,18 +67,18 @@ class PedidosController extends ResourceController
             if ($this->pedidosModel->insert($newPedidos)) {
                 $response = [
                     'response' => 'sucesso',
-                    'mensage' => 'Pedido cadastrado com sucesso'
+                    'mensagem' => 'Pedido cadastrado com sucesso'
                 ];
             } else {
                 $response = [
                     'response' => 'error',
-                    'mensage' => 'erro ao cadastrar Pedidos '
+                    'mensagem' => 'erro ao cadastrar Pedidos '
                 ];
             }
         } catch (Exception $e) {
             $response = [
                 'response' => 'error',
-                'mensage' => 'Erro ao salvar Pedidos',
+                'mensagem' => 'Erro ao salvar Pedidos',
                 'errors' => [
                     'exception' => $e->getMessage()
                 ]
@@ -62,6 +86,7 @@ class PedidosController extends ResourceController
         }
         return $this->response->setJSON($response);
     }
+
     public function update($id = null)
     { 
         $data = $this->request->getJSON();
@@ -71,7 +96,7 @@ class PedidosController extends ResourceController
             $response = [
                 'status' => 200,
                 'error' => null,
-                'mensage' => [
+                'mensagem' => [
                     'sucess' => 'Dados atualizado com sucesso'
                 ]
             ];
@@ -80,6 +105,7 @@ class PedidosController extends ResourceController
             return $this->fail($this->pedidosModel->errors());
         }
     }
+
     public function delete($id = null)
     {        
         $response = [];
@@ -90,28 +116,27 @@ class PedidosController extends ResourceController
                     $response = [
                         'status' => 200,
                         'error' => null,
-                        'mensage' => [
+                        'mensagem' => [
                             'sucess' => 'Dados Deletado com sucesso'
                         ]
                     ];
                 } else {
                     $response = [
                         'response' => 'Error',
-                        'mensage' => 'Erro ao deletar Pedido'
+                        'mensagem' => 'Erro ao deletar Pedido'
                     ];
                 }                
-            }else{
-                //caso nao encontre clientes
+            }else{                
                 return $this->response->setJSON([
                     'response' => 'Error',
-                    'mensage' => 'Pedido nao encontrado'
+                    'mensagem' => 'Pedido nao encontrado'
 
                 ])->setStatusCode(404);
             }                       
         } catch (Exception $e) {
             $response = [
                 'response' => 'Error',
-                'mensage' => 'Erro ao deletar pedido',
+                'mensagem' => 'Erro ao deletar pedido',
                 'errors' => [
                     'exception' => $e->getMessage()
                 ]

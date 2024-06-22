@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\ClientesModel;
 use CodeIgniter\RESTful\ResourceController;
 use Exception;
+use PHPUnit\Framework\MockObject\ReturnValueGenerator;
 
 class ClientesController extends ResourceController
 {
@@ -18,6 +19,34 @@ class ClientesController extends ResourceController
         $data = $this->clientesModel->findAll();
         return $this->response->setJSON($data); //format data
     }
+    public function getList($id = null)
+    {       
+        if ($id === null) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Id não encontrado'
+            ])->setStatusCode(400);            
+        }
+
+
+        $cliente = $this->clientesModel->find($id);
+        if ($cliente) {
+            return $this->response->setJSON([
+                'status' => 'sucess',
+                'data' => $cliente
+
+            ])->setStatusCode(200);
+        }else{
+            return $this->response->setJSON([
+                'status'=> 'error',
+                'mensagem' => 'Cliente não encontrado'
+            ])->setStatusCode(404);
+        }
+
+
+        //if ($this->clientesModel->update($id, $data)) {
+    }
+
     public function create()
     {
         $response = [];
@@ -66,7 +95,7 @@ class ClientesController extends ResourceController
         }
     }
     public function delete($id = null)
-    {        
+    {
         $response = [];
         try {
             $cliente = $this->clientesModel->find($id);
@@ -84,15 +113,15 @@ class ClientesController extends ResourceController
                         'response' => 'error',
                         'mensage' => 'Erro ao deletar cliente'
                     ];
-                }                
-            }else{
+                }
+            } else {
                 //caso nao encontre clientes
                 return $this->response->setJSON([
                     'response' => 'error',
                     'mensage' => 'Cliente nao encontrado'
 
                 ])->setStatusCode(404);
-            }                       
+            }
         } catch (Exception $e) {
             $response = [
                 'response' => 'error',
@@ -102,6 +131,6 @@ class ClientesController extends ResourceController
                 ]
             ];
         }
-         return response( $this->response->setJSON($response));
+        return response($this->response->setJSON($response));
     }
 }

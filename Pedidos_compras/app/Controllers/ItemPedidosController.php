@@ -22,6 +22,28 @@ class ItemPedidosController extends ResourceController
         $data = $this->itemPedidosModel->findAll();
         return $this->response->setJSON($data); //format data
     }
+    public function getList($id = null)
+    {       
+        if ($id === null) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'mensagem' => 'Id não encontrado'
+            ])->setStatusCode(400);            
+        }
+        $item = $this->itemPedidosModel->find($id);
+        if ($item) {
+            return $this->response->setJSON([
+                'status' => 'sucess',
+                'data' => $item
+
+            ])->setStatusCode(200);
+        }else{
+            return $this->response->setJSON([
+                'status'=> 'error',
+                'mensagem' => 'Item não encontrado'
+            ])->setStatusCode(404);
+        }    
+    }
     public function create()
     {
         $response = [];
@@ -37,13 +59,13 @@ class ItemPedidosController extends ResourceController
             return $this->response->setJSON([
                 'response' => 'error',
                 'mensagem' => 'Pedido não encontrado'
-            ]);
+            ])->setStatusCode(400);;
         }
         if (!$produtos) {
             return $this->response->setJSON([
                 'response' => 'error',
                 'mensagem' => 'Produto nao encontrado'
-            ]);
+            ])->setStatusCode(400);;
         }
         $newItem['pedido_id'] = $pedido_id;
         $newItem['produto_id'] = $produtos_id;
@@ -63,7 +85,7 @@ class ItemPedidosController extends ResourceController
         } catch (Exception $e) {
             $response = [
                 'response' => 'error',
-                'mensage' => 'Erro ao salvar Item',
+                'mensagem' => 'Erro ao salvar Item',
                 'errors' => [
                     'exception' => $e->getMessage()
                 ]
@@ -99,27 +121,27 @@ class ItemPedidosController extends ResourceController
                     $response = [
                         'status' => 200,
                         'error' => null,
-                        'mensage' => [
+                        'mensagem' => [
                             'sucess' => 'Dados Deletado com sucesso'
                         ]
                     ];
                 } else {
                     $response = [
                         'response' => 'error',
-                        'mensage' => 'Erro ao deletar Item'
+                        'mensagem' => 'Erro ao deletar Item'
                     ];
                 }
             } else {
                 return $this->response->setJSON([
                     'response' => 'error',
-                    'mensage' => 'Item nao encontrado'
+                    'mensagem' => 'Item nao encontrado'
 
                 ])->setStatusCode(404);
             }
         } catch (Exception $e) {
             $response = [
                 'response' => 'error',
-                'mensage' => 'erro ao deletar Item',
+                'mensagem' => 'erro ao deletar Item',
                 'errors' => [
                     'exception' => $e->getMessage()
                 ]
