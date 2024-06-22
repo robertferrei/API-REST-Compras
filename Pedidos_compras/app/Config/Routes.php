@@ -28,3 +28,10 @@ $routes->put('produtos/update/(:segment)','ProdutosController::update/$1');
 $routes ->delete('produtos/delete/(:segment)','ProdutosController::delete/$1');
 
 
+//Routes ItemPedidos
+$routes->get('item','ItemPedidosController::get');
+$routes->post('item/create','ItemPedidosController::create');
+$routes->put('item/update/(:segment)','ItemPedidosController::update/$1');
+$routes ->delete('item/delete/(:segment)','ItemPedidosController::delete/$1');
+
+
