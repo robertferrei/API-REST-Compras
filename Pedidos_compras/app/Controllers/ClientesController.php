@@ -41,17 +41,16 @@ class ClientesController extends ResourceController
                 'status'=> 'error',
                 'mensagem' => 'Cliente não encontrado'
             ])->setStatusCode(404);
-        }
-
-
-        //if ($this->clientesModel->update($id, $data)) {
+        }     
     }
 
     public function create()
     {
         $response = [];
-        $newCliente['nome_razao'] = $this->request->getPost('nome_razao');
-        $newCliente['cpf_cnpj'] = $this->request->getPost('cpf_cnpj');
+        $newCliente['nome_razao'] = $this->request->getPost('nome_razao');       
+        $newCliente['cpf_cnpj'] = $this->formatCpfCnpj($this->request->getPost('cpf_cnpj'));
+
+
 
         try {
             if ($this->clientesModel->insert($newCliente)) {
@@ -132,5 +131,20 @@ class ClientesController extends ResourceController
             ];
         }
         return response($this->response->setJSON($response));
+    }
+
+    
+    private function formatCpfCnpj($number)
+    {
+        // Remove caracteres não numéricos
+        $number = preg_replace('/[^0-9]/', '', $number);
+
+        if (strlen($number) === 11) { // CPF
+            return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $number);
+        } elseif (strlen($number) === 14) { // CNPJ
+            return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $number);
+        } else {
+            return $number; // Caso não seja CPF nem CNPJ, retorna sem formatação
+        }
     }
 }

@@ -22,7 +22,8 @@ class CreateClientesTable extends Migration
             ],
             'cpf_cnpj' =>[
                 'type'=>'VARCHAR',
-                'constraint'=>20
+                'constraint'=>20,
+                'unique' => true,
             ]        
             ]);
             $this->forge->addPrimaryKey('id');
