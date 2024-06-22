@@ -8,6 +8,6 @@ class ClientesModel extends Model{
     protected $primaryKey = 'id';
     protected $allowedFields = ['nome_razao','cpf_cnpj']; //colunas das tabelas que serão pegas
     protected $validationRules = [
-        'nome_razao' => 'required|min_length[10]|is_unique[clientes.nome_razao]', //nome é obrigatório
+        'nome_razao' => 'required|min_length[3]|is_unique[clientes.nome_razao]', //nome é obrigatório
     ];
 }

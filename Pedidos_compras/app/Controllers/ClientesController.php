@@ -2,92 +2,52 @@
 
 namespace App\Controllers;
 
-use App\Models\ProdutosModel;
+use App\Models\ClientesModel;
 use CodeIgniter\RESTful\ResourceController;
 use Exception;
 
-class ProdutosController extends ResourceController
-{
-    private $produtoModel;
-    private $token = '1234555';
+class ClientesController extends ResourceController
+ {
+    private $clientesModel;
     public function __construct()
     {
-        $this->produtoModel = new \App\Models\ProdutosModel();
+        $this->clientesModel = new \App\Models\ClientesModel();        
     }
-
-    //validação de token
-    private function _validaToken()
-    {
-        return $this->request->getHeaderLine('token') == $this->token;
+    
+    public function get(){
+        $data = $this->clientesModel->findAll();
+        return $this->response->setJSON($data); //format data
     }
-
-    //retorno de todos os produtos cadastrados(GET)        
-    public function list()
-    {
-        $data = $this->produtoModel->findAll(); //buscando todos os produtos da tabela produtos
-        return $this->response->setJSON($data); //formatando o resultado para json
-    }
-    //criando produtos
-
-    public function create()
-    {
+    public function create(){
         $response = [];
+        $newCliente['nome_razao'] =$this->request->getPost('nome_razao');
+        $newCliente['cpf_cnpj'] = $this->request->getPost('cpf_cnpj');
 
-        //validando token
-        if ($this->_validaToken() == true) {
-            $newProduto['produto'] = $this->request->getPost('produto');
-            $newProduto['valor'] = $this->request->getPost('valor');
-
-            try {
-                if ($this->produtoModel->insert($newProduto)) {
-                    //produto adicionado
-                    $response = [
-                        'response' => 'sucesso',
-                        'msg' => 'Produto criado com sucesso'
-                    ];
-                }
-                //criando erros
-                else {
-                    $response = [
-                        'response' => 'error',
-                        'msg' => 'Erro ao salvar produto tente novamente',
-                        'erros' => $this->produtoModel->errors()
-                    ];
-                }
-            } catch (Exception $e) {
+        try{
+            if($this->clientesModel->insert($newCliente)){
                 $response = [
-                    'response' => 'error',
-                    'msg' => 'Erro ao salvar produto ',
-                    'erros' => [
-                        'exception' => $e->getMessage()
-                    ]
+                    'response'=> 'sucesso',
+                    'mensage' => 'cliente cadastrado com sucesso'
                 ];
             }
-        } else {
-            $response = [
+            else{
+                $response = [
+                    'response' => 'error',
+                    'mensage' => 'erro ao cadastrar clientesss'
+                ];
+            }
+
+        }catch(Exception $e){
+            $response =[
                 'response' => 'error',
-                'msg' => 'token inválido'
-            ];
-        }
-        return $this->response->setJSON($response); //formatando para que venha em formato Json
-    }
-
-    public function update($id = null)
-    {
-        $data = $this->request->getJSON();
-        $response = [];
-
-        if ($this->produtoModel->update($id, $data)) {
-            $response = [
-                'status' => 200,
-                'error' => null,
-                'msg' => [
-                    'sucess' => 'Dados atualizado com Sucesso'
+                'mensage' => 'Erro ao salvar Cliente',
+                'errors'=>[
+                    'exception'=> $e->getMessage()
                 ]
             ];
-            return $this->respond($response);
-        } else {
-            return $this->fail($this->produtoModel->errors()); //retorna o erro        
         }
+        return $this->response->setJSON($response);
+
     }
-}
+    
+ }
