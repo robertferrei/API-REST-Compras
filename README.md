@@ -81,5 +81,61 @@ Atualize as variáveis de ambiente do arquivo .app.Config.Database
 
 ```bash
 #relacionamento Tabelas
+OBS: a tabela não tem todos os campos da imagem
 ```
 ![relacionamento tabelas](https://github.com/robertferrei/API-REST-Compras/assets/126025896/ddddee72-4398-44e0-97ac-3e3bcc721357)
+
+
+```
+Exemplos de tabela clientes
+| Parâmetro   | Tipo      | Descrição                        |
+| :---------  | :-------  | :------------------------------- |
+| `nome_razao`| `VARCHAR` | **Obrigatório/Unico** Nome unico |
+| `cpf_cnpj`  | `VARCHAR` | **Obrigatório** CPF Unico        |
+
+```
+
+```
+Exemplos de tabela Item pedidos
+| Parâmetro    | Tipo  | 
+| :---------   | :-------  
+| `pedido_id`  | `INT` | 
+|`produto_id`  | `INT` | 
+|`quantidade`  | `INT` |   
+
+```
+
+```
+Exemplos de tabela  pedidos
+| Parâmetro     | Tipo     | 
+| :---------    | :-------  
+| `cliente_id`  | `INT`    | 
+| `status`      | `ENUM`   | 
+| `total`       | `DOUBLE` |   
+
+```
+
+```
+Exemplos de tabela  Produtos
+| Parâmetro     | Tipo     | 
+| :---------    | :-------  
+| `descricao`   | `VARCHAR`| 
+| `valor`       | `DOUBLE` | 
+   
+```
+
+
+### Resposta de Exemplo GET:
+![image](https://github.com/robertferrei/API-REST-Compras/assets/126025896/dd7ebca7-f6bb-48c9-9205-50326513a6e3)
+
+### Resposta de Exemplo GET/ID:
+![image](https://github.com/robertferrei/API-REST-Compras/assets/126025896/39f0da24-8528-4438-9210-1846c3c22533)
+
+### Resposta de Exemplo POST:
+![image](https://github.com/robertferrei/API-REST-Compras/assets/126025896/249919a5-0cec-495b-88e0-4c8fc7880aa9)
+
+### Resposta de Exemplo DELETE:
+![image](https://github.com/robertferrei/API-REST-Compras/assets/126025896/72204abe-d453-4003-85de-bc27742d8243)
+
+
+
